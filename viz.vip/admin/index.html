@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Create and Display Buttons</title>
+    <link rel="stylesheet" href="css/admin-style.css" />
+  </head>
+  <body>
+    <!-- Модальное окно -->
+    <div id="myModal" class="modal">
+      <div class="modal-content">
+        <span class="close" onclick="closeModal()">&times;</span>
+        <div class="form-group">
+          <label for="username">Username:</label>
+          <input type="text" id="username" placeholder="Enter your username" />
+        </div>
+        <div class="form-group">
+          <label for="password">Password:</label>
+          <input
+            type="password"
+            id="password"
+            placeholder="Enter your password"
+          />
+        </div>
+        <button onclick="authenticate()">Login</button>
+      </div>
+    </div>
+    <div class="form-container">
+      <button id="loginButton" onclick="openModal()">Вход</button>
+      <button id="logoutButton" style="display: none" onclick="logout()">
+        Выход
+      </button>
+      <h1>
+        Admin Panel
+        <!-- Добавили кнопку "Выход" -->
+      </h1>
+      <button id="createButton" style="display: none" onclick="createButton()">
+        Create Button
+      </button>
+    </div>
+    <div class="form-container" style="display: none" id="tableContent">
+      <table id="tableContent">
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Link</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody id="buttonTable">
+          <!-- Table content will be dynamically updated here -->
+        </tbody>
+      </table>
+    </div>
+    <script src="js/admin-script.js"></script>
+  </body>
+</html>
