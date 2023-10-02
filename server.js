@@ -4,14 +4,14 @@ const express = require("express");
 const bodyParser = require("body-parser");
 const fs = require("fs");
 const cors = require("cors");
-const { port } = require("./config"); // Импортируем конфигурацию
+const { port, secretKey, storedUsername, storedPassword } = require('./config');
 const validator = require("validator");
 const jwt = require("jsonwebtoken");
 
 
 const app = express();
 app.use(cors());
-const secretKey = "admin";
+//const secretKey = "admin";
 
 // Промежуточный обработчик для просмотра входящего JSON
 app.use(bodyParser.json());
@@ -70,8 +70,8 @@ app.post("/api/login", (req, res) => {
   const { username, password } = req.body;
 
   // Проверка логина и пароля
-  const storedUsername = "adminadmin"; // замените на ваше значение
-  const storedPassword = "adminadmin"; // замените на ваше значение
+  //const storedUsername = "adminadmin"; // замените на ваше значение
+  //const storedPassword = "adminadmin"; // замените на ваше значение
 
   if (username === storedUsername && password === storedPassword) {
     // Подготовка данных для токена
@@ -98,7 +98,7 @@ const verifyToken = (req, res, next) => {
     return res.status(401).json({ message: "Access denied, token missing" });
   }
 
-  const secretKey = "admin"; // Замените на свой секретный ключ
+  //const secretKey = "admin"; // Замените на свой секретный ключ
 
   try {
     const decoded = jwt.verify(token, secretKey);
