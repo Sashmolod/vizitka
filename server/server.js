@@ -19,7 +19,7 @@ app.use((req, res, next) => {
   next(); // Переходим к следующему обработчику
 });
 
-const BUTTONS_FILE = "button.json";
+const BUTTONS_FILE = "db/button.json";
 
 const readButtons = () => {
   try {
