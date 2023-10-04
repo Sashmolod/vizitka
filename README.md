@@ -16,13 +16,15 @@
 
 Примеры кода и описание использования.
 
-docker-compose down
-docker-compose build
-docker-compose up
+*Список*
+1. docker-compose down
+2. docker-compose build
+3. docker-compose up
 
-git add .
-git commit -m "Commit"
-git push -u origin test1
+*Список*
+1. git add .
+2. git commit -m "Commit"
+3. git push -u origin test1
 
 ## Демонстрации
 
