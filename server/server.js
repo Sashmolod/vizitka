@@ -7,9 +7,8 @@ const cors = require("cors");
 const { port, secretKey, storedUsername, storedPassword } = require('./config');
 const validator = require("validator");
 const jwt = require("jsonwebtoken");
-
-
 const app = express();
+
 app.use(cors());
 
 // Промежуточный обработчик для просмотра входящего JSON

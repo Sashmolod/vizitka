@@ -1,3 +1,10 @@
+
+.link-text {
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  max-width: 100px;
+}
+
 .modal {
   display: none;
   position: fixed;
@@ -72,7 +79,8 @@ th,
 td {
   padding: 10px;
   border-bottom: 1px solid #ccc;
-  text-align: center;
+  vertical-align: middle; /* Это центрирует текст по вертикали */
+  text-align: center; /* Это центрирует текст по горизонтали */
 }
 th {
   background-color: #f2f2f2;
@@ -80,4 +88,10 @@ th {
 td button {
   padding: 5px 10px;
   margin-right: 5px;
+}
+.icon-button {
+  padding: 3px 6px; /* Уменьшенные значения padding */
+  font-size: 14px; /* Уменьшенный размер шрифта */
+  border: none;
+  cursor: pointer;
 }
