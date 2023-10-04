@@ -16,12 +16,12 @@
 
 Примеры кода и описание использования.
 
-*Список*
+*Список команд для Docker*
 1. docker-compose down
 2. docker-compose build
 3. docker-compose up
 
-*Список*
+*Список для Git*
 1. git add .
 2. git commit -m "Commit"
 3. git push -u origin test1
