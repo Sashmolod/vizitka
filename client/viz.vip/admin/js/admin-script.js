@@ -233,7 +233,7 @@ async function getExistingButtons() {
     }
 
     const buttonsData = await response.json();
-    console.log("Buttons data from server:", buttonsData);
+    //console.log("Buttons data from server:", buttonsData);
     // Clear the table
     const buttonTable = document.getElementById("buttonTable");
     buttonTable.innerHTML = "";
