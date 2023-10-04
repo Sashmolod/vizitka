@@ -16,6 +16,14 @@
 
 Примеры кода и описание использования.
 
+docker-compose down
+docker-compose build
+docker-compose up
+
+git add .
+git commit -m "Commit"
+git push -u origin test1
+
 ## Демонстрации
 
 ![Скриншот проекта](screenshot.png)
