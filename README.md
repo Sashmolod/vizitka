@@ -11,6 +11,7 @@
 1. Склонируйте репозиторий: `git clone https://github.com/yourusername/yourproject.git`
 2. Установите зависимости: `npm install`
 3. Запустите приложение: `npm start`
+4. Запустите приложение в режиме разработки: `npm run dev`
 
 ## Использование
 
