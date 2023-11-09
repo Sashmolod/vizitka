@@ -21,6 +21,8 @@
 1. docker-compose down
 2. docker-compose build
 3. docker-compose up
+4. docker run -p 3050:3050 имя_твоего_образа npm run dev
+5. docker run -p 3050:3050 имя_твоего_образа npm start
 
 *Список для Git*
 1. git add .
