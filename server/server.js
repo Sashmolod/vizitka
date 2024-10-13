@@ -7,6 +7,7 @@ const cors = require("cors");
 const { port, secretKey, storedUsername, storedPassword } = require('./config');
 const validator = require("validator");
 const jwt = require("jsonwebtoken");
+const path = require("path");
 const app = express();
 
 app.use(cors());
@@ -18,7 +19,9 @@ app.use((req, res, next) => {
   next(); // Переходим к следующему обработчику
 });
 
-const BUTTONS_FILE = "db/button.json";
+
+const BUTTONS_FILE = path.join(__dirname, "db/button.json");
+
 
 const readButtons = () => {
   try {

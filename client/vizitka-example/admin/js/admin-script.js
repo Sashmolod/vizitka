@@ -41,15 +41,15 @@ async function authenticate() {
 
     if (response.ok) {
       // Authentication successful
-       // Находим соответствующий инпут (предположим, у него есть ID "username")
-       const usernameInput = document.getElementById("username");
-       const passwordInput = document.getElementById("password");
-       // Добавляем класс "is-invalid" к инпуту
-       usernameInput.classList.add("is-valid");
-       passwordInput.classList.add("is-valid");
-       // Удаляем класс "is-valid", если он есть
-       usernameInput.classList.remove("is-invalid");
-       passwordInput.classList.remove("is-invalid");
+      // Находим соответствующий инпут (предположим, у него есть ID "username")
+      const usernameInput = document.getElementById("username");
+      const passwordInput = document.getElementById("password");
+      // Добавляем класс "is-invalid" к инпуту
+      usernameInput.classList.add("is-valid");
+      passwordInput.classList.add("is-valid");
+      // Удаляем класс "is-valid", если он есть
+      usernameInput.classList.remove("is-invalid");
+      passwordInput.classList.remove("is-invalid");
       const data = await response.json();
       console.log("Received data from server:", data);
       const token = data.token;
