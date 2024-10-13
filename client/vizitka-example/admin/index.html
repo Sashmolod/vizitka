@@ -155,33 +155,43 @@
       </div>
     </div>
     <div class="form-container">
-      <button
-        class="btn btn-outline-success"
-        id="loginButton"
-        onclick="openModal()"
-      >
-        Вход
-      </button>
-      <button
-        class="btn btn-outline-danger"
-        id="logoutButton"
-        style="display: none"
-        onclick="logout()"
-      >
-        Выход
-      </button>
       <h1>
         Admin Panel
         <!-- Добавили кнопку "Выход" -->
       </h1>
-      <button
-        class="btn btn-outline-success"
-        id="createButton"
-        style="display: none"
-        onclick="openCreateModal()"
-      >
-        Create Button
-      </button>
+        <div class="d-flex justify-content-between">
+          <button
+                  class="btn btn-outline-success me-2"
+                  id="loginButton"
+                  onclick="openModal()"
+          >
+            Вход
+          </button>
+          <button
+            class="btn btn-outline-success me-2"
+            id="createButton"
+            style="display: none"
+            onclick="openCreateModal()"
+          >
+            Create Button
+          </button>
+          <button
+                  class="btn btn-outline-primary me-2"
+                  id="changeBackgroundButton"
+                  onclick="document.getElementById('backgroundImageInput').click();"
+          >
+            Change Background
+          </button>
+          <input type="file" id="backgroundImageInput" style="display: none;" accept="image/*" onchange="uploadBackground()" />
+          <button
+                  class="btn btn-outline-danger"
+                  id="logoutButton"
+                  style="display: none"
+                  onclick="logout()"
+          >
+            Exit
+          </button>
+        </div>
     </div>
     <div class="form-container" style="display: none" id="tableContent">
       <table class="table table-striped" id="tableContent">
@@ -198,6 +208,7 @@
         </tbody>
       </table>
     </div>
+    <script src="js/upload.js"></script>
     <script src="js/admin-script.js"></script>
   </body>
 </html>

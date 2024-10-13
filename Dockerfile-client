@@ -4,4 +4,4 @@ WORKDIR /usr/share/nginx/html
 
 COPY client/ .
 
-EXPOSE 80
+EXPOSE 8010

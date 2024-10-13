@@ -14,4 +14,4 @@ services:
       dockerfile: Dockerfile-client
     container_name: my_client
     ports:
-      - "80:80"
+      - "8010:80"

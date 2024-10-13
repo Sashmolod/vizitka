@@ -10,4 +10,5 @@ COPY server/ .
 
 EXPOSE 3050
 
-CMD ["npm", "start"]
+#CMD ["npm", "run", "dev"]
+CMD ["node", "server.js"]
