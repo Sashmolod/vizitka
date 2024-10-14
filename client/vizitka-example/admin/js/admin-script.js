@@ -65,6 +65,7 @@ async function authenticate() {
       alert("Авторизация успешна!");
       // Показываем кнопку "Создать" и таблицу
       document.getElementById("createButton").style.display = "block";
+      document.getElementById("changeBackgroundButton").style.display = "block";
       document.getElementById("tableContent").style.display = "block";
       // Скрываем кнопку "Вход"
       document.getElementById("loginButton").style.display = "none";
@@ -367,6 +368,7 @@ window.onload = function () {
     // Показываем кнопку "Выход"
     document.getElementById("logoutButton").style.display = "block";
     document.getElementById("createButton").style.display = "block";
+    document.getElementById("changeBackgroundButton").style.display = "block";
     document.getElementById("tableContent").style.display = "block";
   } else {
     // Показываем кнопку "Вход"
