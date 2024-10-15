@@ -1,4 +1,5 @@
 async function uploadBackground() {
+    console.log("Upload function started");
     const input = document.getElementById('backgroundImageInput');
     const file = input.files[0];
 
@@ -47,6 +48,10 @@ async function uploadBackground() {
             alert('Background image uploaded successfully!');
             //updateBackground(data.imagePath); // Обновляем фон с полученным путём к изображению
             closeCreateModal(); // Закрываем модальное окно после успешной загрузки
+            setTimeout(() => {
+                window.location.href = `${window.location.href}?t=${new Date().getTime()}`;
+            }, 100);
+
         } else {
             alert('Error uploading image: ' + data.message);
         }
