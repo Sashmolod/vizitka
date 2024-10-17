@@ -54,7 +54,7 @@ async function authenticate() {
             localStorage.setItem("token", JSON.stringify(token));
 
             // Показываем сообщение об успешной аутентификации
-            alert("Авторизация успешна!");
+            alert("Успех", "Авторизация успешна!");
             // Скрываем кнопку "Вход"
             document.getElementById("loginButton").style.display = "none";
             // Показываем кнопку "Выход"

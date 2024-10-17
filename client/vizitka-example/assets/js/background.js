@@ -1,5 +1,6 @@
+const serverAddress = "http://localhost:3050";
 // Получаем фоновое изображение с сервера
-fetch('http://localhost:3050/uploads/bg-img.jpg') // Замените на нужный вам путь
+fetch(`${serverAddress}/uploads/bg-img.jpg`) // Замените на нужный вам путь
     .then(response => {
         if (!response.ok) {
             throw new Error('Network response was not ok');
