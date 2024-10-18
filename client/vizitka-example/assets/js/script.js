@@ -1,6 +1,8 @@
+const serverAddress = "http://localhost:3050";
+
 async function fetchData() {
   try {
-    const response = await fetch('http://localhost:3050/api/buttons');
+    const response = await fetch(`${serverAddress}/api/buttons`);
     const data = await response.json();
 
     const buttonsContainer = document.getElementById('buttonsContainer');

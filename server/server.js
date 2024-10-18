@@ -4,19 +4,59 @@ const express = require("express");
 const bodyParser = require("body-parser");
 const fs = require("fs");
 const cors = require("cors");
-const { port, secretKey, storedUsername, storedPassword } = require('./config');
+const { port, secretKey, storedUsername, storedPassword, client} = require('./config');
 const validator = require("validator");
 const jwt = require("jsonwebtoken");
 const path = require("path");
+const multer = require("multer");
+const serveIndex = require('serve-index');
 const app = express();
+const uploadsPath = path.join(__dirname, 'uploads');
+// Проверка и создание папки для загрузок, если она не существует
+console.log("Checking if 'uploads' folder exists...");
+if (!fs.existsSync('uploads')) {
+  fs.mkdirSync('uploads');
+  console.log("'uploads' folder created.");
+} else {
+  console.log("'uploads' folder already exists.");
+}
+
 
 app.use(cors());
-
 // Промежуточный обработчик для просмотра входящего JSON
 app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true })); // Для обработки URL-encoded данных
+app.use('/uploads', express.static('uploads')); // Папка для загруженных изображений
+//app.use('/uploads', express.static(uploadsPath), serveIndex(uploadsPath, { icons: true }));
+// Промежуточный обработчик для логирования запросов
 app.use((req, res, next) => {
-  console.log("Incoming JSON:", req.body);
+  console.log(`Request Method: ${req.method}, Request URL: ${req.url}`);
   next(); // Переходим к следующему обработчику
+});
+
+// Настройка хранения загружаемых файлов
+const storage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, 'uploads/'); // Папка для сохранения загруженных файлов
+  },
+  filename: (req, file, cb) => {
+    cb(null, Date.now() + path.extname(file.originalname)); // Уникальное имя файла
+  }
+});
+
+const upload = multer({
+  limits: { fileSize: 5 * 1024 * 1024 },
+  storage: storage,
+  fileFilter: (req, file, cb) => {
+    const filetypes = /jpeg|jpg|png|gif/;
+    const mimetype = filetypes.test(file.mimetype);
+    const extname = filetypes.test(path.extname(file.originalname).toLowerCase());
+
+    if (mimetype && extname) {
+      return cb(null, true);
+    }
+    cb(new Error('Error: File upload only supports the following filetypes - ' + filetypes));
+  }
 });
 
 
@@ -80,7 +120,7 @@ app.post("/api/login", (req, res) => {
 
     // Генерация токена
     const token = jwt.sign(tokenData, secretKey, { expiresIn: "1h" });
-    console.log("Generated token:", token); 
+    console.log("Generated token:", token);
     // Установка токена в cookies с флагом HttpOnly
     res.cookie("token", token, { httpOnly: true });
     res.json({ token }); // Изменили на JSON
@@ -151,6 +191,89 @@ app.delete("/api/buttons/:id", verifyToken, async(req, res) => {
   const updatedButtons = buttons.filter((button) => button.id !== id);
   writeButtons(updatedButtons);
   res.json({ message: "Button deleted successfully" });
+});
+
+app.post("/upload", verifyToken, upload.single("backgroundImage"), (req, res) => {
+  console.log("Incoming file data:", req.file); // Логируем информацию о загруженном файле
+
+  if (!req.file) {
+    return res.status(400).json({ success: false, message: 'No file uploaded' });
+  }
+
+  const newFilePath = path.join(uploadsPath, 'bg-img' + path.extname(req.file.originalname)); // Новый путь для сохранения
+
+  // Проверяем, существует ли файл bg-img
+  fs.access(newFilePath, fs.constants.F_OK, (err) => {
+    if (!err) {
+      // Файл существует, удаляем его
+      fs.unlink(newFilePath, (unlinkErr) => {
+        if (unlinkErr) {
+          console.error('Error deleting existing file:', unlinkErr);
+          return res.status(500).json({ success: false, message: 'Error deleting existing file' });
+        }
+        console.log('Existing file deleted:', newFilePath);
+        saveNewImage();
+      });
+    } else {
+      // Файл не существует, сохраняем новое изображение
+      saveNewImage();
+    }
+  });
+
+  function saveNewImage() {
+    const uploadedFilePath = req.file.path; // Путь к загруженному файлу
+
+    // Переименовываем файл
+    fs.promises.rename(uploadedFilePath, newFilePath)
+        .then(() => {
+          const imagePath = `/uploads/bg-img${path.extname(req.file.originalname)}`; // Формируем путь
+          return res.json({ success: true, imagePath });
+        })
+        .catch(err => {
+          console.error('Error saving image:', err);
+          return res.status(500).json({ success: false, message: 'Error saving image', details: err.message });
+        });
+  }
+});
+
+const uploadsPathImage = path.join(__dirname, "uploads");
+
+// Возвращаем список файлов в директории uploads
+app.get('/uploads', (req, res) => {
+  fs.readdir(uploadsPathImage, (err, files) => {
+    if (err) {
+      return res.status(500).send('Unable to scan directory: ' + err);
+    }
+    res.json(files); // Возвращаем список файлов в формате JSON
+  });
+});
+
+// Возвращаем файл по запрашиваемому имени
+app.get('/uploads/:filename', (req, res) => {
+  const filename = req.params.filename;
+  const filePath = path.join(uploadsPath, filename);
+
+  // Проверяем, существует ли файл
+  fs.access(filePath, fs.constants.F_OK, (err) => {
+    if (err) {
+      return res.status(404).send('File not found');
+    }
+
+    // Отправляем файл
+    res.sendFile(filePath);
+  });
+});
+
+// Обработка ошибок для multer и других ошибок
+app.use((err, req, res, next) => {
+  if (err instanceof multer.MulterError) {
+    console.error("Multer error:", err);
+    return res.status(500).json({ success: false, message: err.message });
+  } else if (err) {
+    console.error("General error:", err);
+    return res.status(500).json({ success: false, message: err.message });
+  }
+  next();
 });
 
 app.listen(port, () => {

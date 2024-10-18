@@ -1,203 +1,168 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <title>Admin Panel</title>
-    <link
-      rel="stylesheet"
-      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"
-    />
-    <link
-      rel="stylesheet"
-      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
-      integrity="...your-integrity-code..."
-      crossorigin="anonymous"
-    />
-    <link rel="stylesheet" href="css/admin-style.css" />
-  </head>
-  <body>
-    <!-- Модальное окно авторизации-->
-    <div id="myModal" class="modal">
-      <div class="modal-content">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+          integrity="...your-integrity-code..." crossorigin="anonymous"/>
+    <link rel="stylesheet" href="css/admin-style.css"/>
+</head>
+<body>
+
+<!-- Модальные окна -->
+<div class="modal" id="myModal">
+    <div class="modal-overlay" onclick="closeModal()"></div>
+    <div class="modal-content">
         <span class="close" onclick="closeModal()">&times;</span>
-        <div class="form-group">
-          <label for="username" class="form-label">Username:</label>
-          <input
-            type="text"
-            id="username"
-            placeholder="Enter your username"
-            class="form-control"
-            required
-          />
-          <div class="invalid-feedback">Укажите имя пользователя.</div>
-        </div>
-        <div class="form-group">
-          <label for="password" class="form-label">Password:</label>
-          <input
-            type="password"
-            id="password"
-            placeholder="Enter your password"
-            class="form-control"
-            required
-          />
-          <div class="invalid-feedback">Укажите пароль.</div>
-        </div>
-        <div>
-          <button
-            type="submit"
-            class="btn btn-outline-success"
-            onclick="authenticate()"
-          >
-            Login
-          </button>
-        </div>
-      </div>
+        <form id="loginForm" onsubmit="authenticate(); return false;">
+            <div class="form-group">
+                <label for="username" class="form-label">Username:</label>
+                <input type="text" id="username" placeholder="Enter your username" class="form-control" required/>
+                <div class="invalid-feedback">Укажите имя пользователя.</div>
+            </div>
+            <div class="form-group">
+                <label for="password" class="form-label">Password:</label>
+                <input type="password" id="password" placeholder="Enter your password" class="form-control" required/>
+                <div class="invalid-feedback">Укажите пароль.</div>
+            </div>
+            <button type="submit" class="btn btn-outline-success">Login</button>
+        </form>
     </div>
-    <!-- Модальное окно для создания кнопки -->
-    <div id="createModal" class="modal">
-      <div class="modal-content">
+</div>
+
+<div class="modal" id="createModal">
+    <div class="modal-overlay" onclick="closeCreateModal()"></div>
+    <div class="modal-content">
         <span class="close" onclick="closeCreateModal()">&times;</span>
-        <div class="form-group">
-          <!-- <label for="createName">Name:</label> -->
-          <input
-            type="text"
-            id="createName"
-            class="form-control"
-            placeholder="Enter button name"
-          />
-          <div id="passwordHelpBlock" class="form-text">
-            Должно быть 1-20 символов.
-          </div>
-        </div>
-        <div class="form-group">
-          <!-- <label for="createLink">Link:</label> -->
-          <input
-            type="text"
-            id="createLink"
-            class="form-control"
-            placeholder="Enter button link"
-          />
-          <div id="passwordHelpBlock" class="form-text">
-            Ваша ссылка должна начинаться на http:// или https://
-          </div>
-        </div>
-        <div class="form-group">
-          <!-- <label for="createButtonText">Button Text:</label> -->
-          <input
-            type="text"
-            id="createButtonText"
-            class="form-control"
-            placeholder="Enter button text"
-          />
-          <div id="passwordHelpBlock" class="form-text">
-            Должно быть 1-20 символов.
-          </div>
-        </div>
-        <div>
-          <button class="btn btn-outline-success" onclick="createButton()">
-            Create Button
-          </button>
-          <button class="btn btn-outline-secondary" onclick="clearCreateForm()">
-            Clear Form
-          </button>
-        </div>
-      </div>
+        <form id="createButtonForm" onsubmit="createButton(); return false;">
+            <div class="form-group">
+                <input type="text" id="createName" class="form-control" placeholder="Enter button name" required/>
+                <div class="form-text">Должно быть 1-20 символов.</div>
+            </div>
+            <div class="form-group">
+                <input type="text" id="createLink" class="form-control" placeholder="Enter button link" required/>
+                <div class="form-text">Ваша ссылка должна начинаться на http:// или https://</div>
+            </div>
+            <div class="form-group">
+                <input type="text" id="createButtonText" class="form-control" placeholder="Enter button text" required/>
+                <div class="form-text">Должно быть 1-20 символов.</div>
+            </div>
+            <div class="d-flex justify-content-between">
+                <button type="submit" class="btn btn-outline-success">Create Button</button>
+                <button type="button" class="btn btn-outline-secondary" onclick="clearCreateForm()">Clear Form</button>
+            </div>
+        </form>
     </div>
-    <!-- Модальное окно для редактирования кнопки -->
-    <div id="editModal" class="modal">
-      <div class="modal-content">
+</div>
+
+<div class="modal" id="editModal">
+    <div class="modal-overlay" onclick="closeEditModal()"></div>
+    <div class="modal-content">
         <span class="close" onclick="closeEditModal()">&times;</span>
-        <div class="form-group">
-          <!-- <label for="editName">Name:</label> -->
-          <input
-            type="text"
-            id="editName"
-            class="form-control"
-            placeholder="Enter button name"
-          />
-          <div id="passwordHelpBlock" class="form-text">
-            Должно быть 1-20 символов.
-          </div>
-        </div>
-        <div class="form-group">
-          <!-- <label for="editLink">Link:</label> -->
-          <input
-            type="text"
-            id="editLink"
-            class="form-control"
-            placeholder="Enter button link"
-          />
-          <div id="passwordHelpBlock" class="form-text">
-            Ваша ссылка должна начинаться на http:// или https://
-          </div>
-        </div>
-        <div class="form-group">
-          <!-- <label for="editButtonText">Button Text:</label> -->
-          <input
-            type="text"
-            id="editButtonText"
-            class="form-control"
-            placeholder="Enter button text"
-          />
-          <div id="passwordHelpBlock" class="form-text">
-            Должно быть 1-20 символов.
-          </div>
-        </div>
-        <div>
-          <button class="btn btn-outline-success" onclick="saveButtonChanges()">
-            Save Changes
-          </button>
-          <button class="btn btn-outline-secondary" onclick="clearEditForm()">
-            Clear Form
-          </button>
-        </div>
-      </div>
+        <form id="editButtonForm" onsubmit="saveButtonChanges(); return false;">
+            <div class="form-group">
+                <input type="text" id="editName" class="form-control" placeholder="Enter button name" required/>
+                <div class="form-text">Должно быть 1-20 символов.</div>
+            </div>
+            <div class="form-group">
+                <input type="text" id="editLink" class="form-control" placeholder="Enter button link" required/>
+                <div class="form-text">Ваша ссылка должна начинаться на http:// или https://</div>
+            </div>
+            <div class="form-group">
+                <input type="text" id="editButtonText" class="form-control" placeholder="Enter button text" required/>
+                <div class="form-text">Должно быть 1-20 символов.</div>
+            </div>
+            <div class="d-flex justify-content-between">
+                <button type="submit" class="btn btn-outline-success">Save Changes</button>
+                <button type="button" class="btn btn-outline-secondary" onclick="clearEditForm()">Clear Form</button>
+            </div>
+        </form>
     </div>
-    <div class="form-container">
-      <button
-        class="btn btn-outline-success"
-        id="loginButton"
-        onclick="openModal()"
-      >
-        Вход
-      </button>
-      <button
-        class="btn btn-outline-danger"
-        id="logoutButton"
-        style="display: none"
-        onclick="logout()"
-      >
-        Выход
-      </button>
-      <h1>
-        Admin Panel
-        <!-- Добавили кнопку "Выход" -->
-      </h1>
-      <button
-        class="btn btn-outline-success"
-        id="createButton"
-        style="display: none"
-        onclick="openCreateModal()"
-      >
-        Create Button
-      </button>
+</div>
+
+<header class="form-container mt-3 mb-3">
+    <h1>
+        <span style="font-weight: bold; color: #0085b5;">Admin</span> Panel
+        <img src="img/logo.png" alt="Logo" style="height: 70px; vertical-align: middle;"/>
+    </h1>
+    <div class="d-flex justify-content-between">
+        <button class="btn btn-outline-success me-2" id="loginButton" onclick="openModal()">Login</button>
+        <button class="btn btn-outline-danger" id="logoutButton" style="display: none;" onclick="logout()">Exit</button>
     </div>
-    <div class="form-container" style="display: none" id="tableContent">
-      <table class="table table-striped" id="tableContent">
-        <thead>
-          <tr>
-            <th scope="col">Name</th>
-            <th scope="col">Link</th>
-            <th scope="col">Description</th>
-            <th scope="col">Action</th>
-          </tr>
-        </thead>
-        <tbody id="buttonTable">
-          <!-- Table content will be dynamically updated here -->
-        </tbody>
-      </table>
+</header>
+
+<div id="content" style="display: none;">
+    <!-- Добавление табов -->
+    <ul class="nav nav-tabs justify-content-center" id="myTab" role="tablist">
+        <li class="nav-item" role="presentation">
+            <a class="nav-link active" id="links-tab" data-bs-toggle="tab" href="#links" role="tab"
+               aria-controls="links"
+               aria-selected="true">Links</a>
+        </li>
+        <li class="nav-item" role="presentation">
+            <a class="nav-link" id="empty-tab" data-bs-toggle="tab" href="#backgrounds" role="tab"
+               aria-controls="backgrounds" aria-selected="false">Background</a>
+        </li>
+        <li class="nav-item" role="presentation">
+            <a class="nav-link" id="emptys-tab" data-bs-toggle="tab" href="#emptys" role="tab"
+               aria-controls="emptys" aria-selected="false">Empty</a>
+        </li>
+    </ul>
+
+    <div class="tab-content" id="myTabContent">
+        <div class="tab-pane fade show active" id="links" role="tabpanel" aria-labelledby="links-tab">
+            <div class="form-container" id="tableContent">
+                <div class="d-flex justify-content-center">
+                    <div style="margin: 0 auto; text-align: center;">
+                        <h3>Buttons</h3>
+                        <button class="btn btn-outline-success" id="createButton" onclick="openCreateModal()">Create
+                            Button
+                        </button>
+                    </div>
+                </div>
+                <table class="table table-striped">
+                    <thead>
+                    <tr>
+                        <th scope="col">Name</th>
+                        <th scope="col">Link</th>
+                        <th scope="col">Description</th>
+                        <th scope="col">Action</th>
+                    </tr>
+                    </thead>
+                    <tbody id="buttonTable">
+                    <!-- Table content will be dynamically updated here -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div class="tab-pane fade" id="backgrounds" role="tabpanel" aria-labelledby="backgrounds-tab">
+            <div class="form-container" id="tableContent">
+                <h3>Background</h3>
+                <button class="btn btn-outline-primary" id="changeBackgroundButton"
+                        onclick="document.getElementById('backgroundImageInput').click();">Change Background
+                </button>
+                <input type="file" id="backgroundImageInput" style="display: none;" accept="image/*"
+                       onchange="uploadBackground()"/>
+
+                <div id="backgroundImageContainer" style="margin-top: 10px; text-align: center;">
+                    <img id="backgroundImage" src="http://localhost:3050/uploads/bg-img.jpg"
+                         alt="Загруженное изображение"
+                         style="max-width: 100%; height: auto; display: block; margin: 0 auto;"/>
+                </div>
+            </div>
+        </div>
+        <div class="tab-pane fade" id="emptys" role="tabpanel" aria-labelledby="emptys-tab">
+            <div class="form-container" id="tableContent">
+                <h3>Empty</h3>
+            </div>
+        </div>
     </div>
-    <script src="js/admin-script.js"></script>
-  </body>
+</div>
+<script src="js/tabs.js"></script>
+<script src="js/upload.js"></script>
+<script src="js/admin-script.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
 </html>
