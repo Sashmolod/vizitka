@@ -110,6 +110,11 @@ function validateButtonData(name, link, buttonText) {
     };
 }
 
+// Обработчик для корневого маршрута
+app.get('/', (req, res) => {
+    res.send('Welcome to the server!');
+});
+
 app.post("/api/login", async (req, res) => {
     const {username, password} = req.body;
     const isUser = await bcrypt.compare(username, storedUsername);
