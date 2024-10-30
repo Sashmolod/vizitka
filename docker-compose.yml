@@ -7,8 +7,6 @@ services:
     container_name: my_server
     ports:
       - "3050:3050"
-    volumes:
-      - /var/www/vizitka/server:/var/www/vizitka/server
     networks:
       - my_network
     restart: unless-stopped
@@ -20,8 +18,6 @@ services:
     container_name: my_client
     ports:
       - "8010:80"
-    volumes:
-      - /var/www/vizitka/client:/usr/share/nginx/html
     networks:
       - my_network
     restart: unless-stopped
