@@ -9,6 +9,7 @@ services:
       - "3050:3050"
     networks:
       - my_network
+    restart: unless-stopped
 
   client:
     build:
@@ -19,6 +20,7 @@ services:
       - "8010:80"
     networks:
       - my_network
+    restart: unless-stopped
 
 networks:
   my_network:

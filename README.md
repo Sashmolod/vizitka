@@ -24,10 +24,14 @@
 4. docker run -p 3050:3050 имя_твоего_образа npm run dev
 5. docker run -p 3050:3050 имя_твоего_образа npm start
 
+
 *Список для Git*
 1. git add .
 2. git commit -m "Commit"
 3. git push -u origin test1
+
+*Список команд для Консоли*
+1. Сгенерировать хеш: `node generateHash.js`
 
 ## Демонстрации
 

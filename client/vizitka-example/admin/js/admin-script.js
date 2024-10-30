@@ -1,4 +1,4 @@
-const serverAddress = "http://localhost:3050";
+const serverAddress = "http://216.219.94.108:3050";
 
 function openModal() {
     const token = getToken();
@@ -53,15 +53,20 @@ async function authenticate() {
             const token = data.token;
             localStorage.setItem("token", JSON.stringify(token));
 
-            // Показываем сообщение об успешной аутентификации
-            alert("Успех", "Авторизация успешна!");
+
             // Скрываем кнопку "Вход"
             document.getElementById("loginButton").style.display = "none";
             // Показываем кнопку "Выход"
             document.getElementById("logoutButton").style.display = "block";
 
             document.getElementById("content").style.display = "block";
-            window.location.reload();
+
+            // Показываем сообщение об успешной аутентификации
+            showToast('success', "Авторизация успешна!");
+            setTimeout(() => {
+                window.location.reload();
+            }, 2000);
+              
         } else {
             const data = await response.json();
             if (data.error) {
@@ -76,7 +81,7 @@ async function authenticate() {
                 passwordInput.classList.remove("is-valid");
                 // Отображаем сообщение об ошибке (можно использовать alert, но лучше показать сообщение пользователю в интерфейсе)
                 const errorMessage = data.error; // Предполагается, что сервер вернул текст ошибки
-                alert("Authentication failed: " + errorMessage);
+                showToast('error','Аутентификация не удалась: ' + errorMessage);
             }
         }
     } catch (error) {
@@ -135,16 +140,16 @@ async function createButton() {
                 // Обновим список кнопок после успешного создания
                 getExistingButtons();
 
-                alert("Button created successfully.");
+                showToast('success','Кнопка создана успешно');
             } else {
                 const data = await response.json();
-                alert("Error creating button: " + data.error);
+                showToast('error','Ошибка создания кнопки: ' + data.error);
             }
         } else {
-            alert("Please provide valid name, link, and button text.");
+            showToast('error','Please provide valid name, link, and button text.');
         }
     } catch (error) {
-        alert("Error creating button: " + error.message);
+        showToast('error','Ошибка создания кнопки: ' + error.message);
     }
 }
 
@@ -237,20 +242,32 @@ async function saveButtonChanges() {
                 // Обновим список кнопок после успешного обновления
                 getExistingButtons();
 
-                alert("Button updated successfully.");
+                showToast('success','Кнопка обновлена успешно');
             } else {
                 const data = await response.json();
-                alert("Error updating button: " + data.error);
+                showToast('error','Ошибка обновления кнопки: ' + data.error);
             }
         } else {
-            alert("Please provide valid name, link, and button text.");
+            showToast('error','Please provide valid name, link, and button text.');
         }
     } catch (error) {
-        alert("Error updating button: " + error.message);
+        showToast('error','Ошибка обновления кнопки: ' + error.message);
     }
 }
 
 async function deleteButton(id) {
+    // Показать алерт с подтверждением
+    const isConfirmed = confirm("Вы действительно хотите удалить кнопку?");
+    
+    // Если пользователь нажал "Нет", выход из функции
+    if (!isConfirmed) {
+        showToast('error', 'Кнопка не удалена');
+        setTimeout(() => {
+            window.location.reload();
+        }, 2000);
+        return;
+    }
+
     try {
         console.log("Deleting button with ID:", id);
 
@@ -275,15 +292,17 @@ async function deleteButton(id) {
 
         if (clonedResponse.ok) {
             // Перезагрузить страницу после успешного обновления
-            window.location.reload();
-            alert("Button deleted successfully.");
+            showToast('success', 'Кнопка удалена успешно');
+            setTimeout(() => {
+                window.location.reload();
+            }, 2000);
         } else {
             // Обработка ошибок с выводом сообщения об ошибке
-            alert("Error deleting button: " + data.error);
+            showToast('error', 'Ошибка удаления кнопки: ' + data.error);
         }
     } catch (error) {
         // Обработка ошибок с выводом сообщения об ошибке
-        alert("Error deleting button: " + error.message);
+        showToast('error', 'Ошибка удаления кнопки: ' + error.message);
     }
 }
 
@@ -343,10 +362,11 @@ function getToken() {
 }
 
 function logout() {
+    showToast('success','Выход выполнен успешно!');
     localStorage.removeItem("token"); // Удаляем токен из Local Storage
-    alert("Выход выполнен успешно.");
-    window.location.reload();
-    window.location.href = "../index.html";
+    setTimeout(() => {
+        window.location.href = "../index.html";
+      }, 2000);
 }
 
 window.onload = function () {
@@ -362,4 +382,24 @@ window.onload = function () {
 
     }
     getExistingButtons();
-};
+}
+
+function showToast(type, message) {
+    const toastBody = document.querySelector('.toast-body');
+    toastBody.textContent = message;
+
+    const toast = new bootstrap.Toast(document.getElementById('liveToast'));
+
+    // Измените класс в зависимости от типа сообщения
+    const toastElement = document.getElementById('liveToast');
+    if (type === 'success') {
+        toastElement.classList.add('bg-success');
+        toastElement.classList.remove('bg-danger');
+    } else if (type === 'error') {
+        toastElement.classList.add('bg-danger');
+        toastElement.classList.remove('bg-success');
+    }
+
+    toast.show();
+}
+
