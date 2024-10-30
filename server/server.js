@@ -13,6 +13,8 @@ const multer = require("multer");
 const serveIndex = require('serve-index');
 const app = express();
 const uploadsPath = path.join(__dirname, 'uploads');
+const { exec } = require("child_process");
+
 // Проверка и создание папки для загрузок, если она не существует
 console.log("Checking if 'uploads' folder exists...");
 if (!fs.existsSync('uploads')) {
@@ -272,6 +274,19 @@ app.use((err, req, res, next) => {
         return res.status(500).json({success: false, message: err.message});
     }
     next();
+});
+
+// Вебхук для обновления репозитория
+app.post('/webhook', (req, res) => {
+    exec('git -C /var/www/vizitka pull', (err, stdout, stderr) => {
+        if (err) {
+            console.error(`exec error: ${err}`);
+            return res.status(500).send('Error pulling repo');
+        }
+        console.log(`stdout: ${stdout}`);
+        console.error(`stderr: ${stderr}`);
+        res.status(200).send('Repo updated');
+    });
 });
 
 app.listen(port, () => {
