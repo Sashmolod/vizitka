@@ -47,12 +47,15 @@ async function authenticate() {
 
       // Закрываем модальное окно
       closeModal();
-
+      // Показываем сообщение об успешной аутентификации
+      showToast('Авторизация успешна!');
+      setTimeout(() => {
+        window.location.reload();
+      }, 2000);
       // Обновляем список кнопок после успешной авторизации
       getExistingButtons();
 
-      // Показываем сообщение об успешной аутентификации
-      alert("Авторизация успешна!");
+
       // Показываем кнопку "Создать" и таблицу
       document.getElementById("createButton").style.display = "block";
       document.getElementById("tableContent").style.display = "block";
@@ -60,7 +63,9 @@ async function authenticate() {
       document.getElementById("loginButton").style.display = "none";
       // Показываем кнопку "Выход"
       document.getElementById("logoutButton").style.display = "block";
-      window.location.reload();
+      setTimeout(() => {
+        window.location.reload();
+      }, 2000);
     } else {
       const data = await response.json();
       alert("Authentication failed: " + data.error);
@@ -101,7 +106,7 @@ async function createButton() {
       if (response.ok) {
         // Перезагрузить страницу после успешного создания
         window.location.reload();
-        alert("Button created successfully.");
+        showToast('Кнопка создана успешно!');
       } else {
         // Обработка ошибок с выводом сообщения об ошибке
         const data = await response.json();
@@ -166,7 +171,7 @@ async function editButton(buttonId, name, link, buttonText) {
       if (response.ok) {
         // Перезагрузить страницу после успешного обновления
         window.location.reload();
-        alert("Button updated successfully.");
+        showToast('Кнопка обновлена успешно!');
       } else {
         // Обработка ошибок с выводом сообщения об ошибке
         const data = await response.json();
@@ -206,8 +211,11 @@ async function deleteButton(id) {
 
     if (clonedResponse.ok) {
       // Перезагрузить страницу после успешного обновления
-      window.location.reload();
-      alert("Button deleted successfully.");
+      //window.location.reload();
+      showToast('Кнопка удалена успешно!');
+      setTimeout(() => {
+        window.location.reload();
+      }, 2000);
     } else {
       // Обработка ошибок с выводом сообщения об ошибке
       alert("Error deleting button: " + data.error);
@@ -267,8 +275,10 @@ function getToken() {
 
 function logout() {
   localStorage.removeItem("token"); // Удаляем токен из Local Storage
-  alert("Выход выполнен успешно.");
-  window.location.reload();
+  showToast('Выход выполнен успешно.');
+  setTimeout(() => {
+    window.location.reload();
+  }, 2000);
   // Опционально: Перенаправьте пользователя на страницу входа или выполните другие действия при выходе.
 }
 

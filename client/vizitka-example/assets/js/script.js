@@ -1,4 +1,4 @@
-const serverAddress = "http://localhost:3050";
+const serverAddress = "http://216.219.94.108:3050";
 
 async function fetchData() {
   try {

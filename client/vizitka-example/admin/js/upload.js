@@ -1,27 +1,21 @@
 async function uploadBackground() {
-    console.log("Upload function started");
     const input = document.getElementById('backgroundImageInput');
     const file = input.files[0];
 
     // Проверяем, выбрано ли изображение
     if (!file) {
-        alert('Please select an image to upload.');
+        showToast('error','Выберите файл для загрузки.');
         return;
     }
 
     // Проверка размера файла
-    if (file.size > 10 * 1024 * 1024) { // Например, 10MB
-        alert('File size exceeds 10MB');
+    if (file.size > 2 * 1024 * 1024) { // Например, 10MB
+        showToast('error','Файл не должен быть больше 2MB');
         return;
     }
 
     const formData = new FormData();
     formData.append('backgroundImage', file);
-
-    console.log("FormData contents:");
-    for (let [key, value] of formData.entries()) {
-        console.log(key, value);
-    }
 
     const token = getToken(); // Получаем токен
 
@@ -45,20 +39,20 @@ async function uploadBackground() {
 
         // Проверяем, успешна ли загрузка
         if (data.success) {
-            alert('Background image uploaded successfully!');
+            showToast('success','Фон успешно загружен!');
             //updateBackground(data.imagePath); // Обновляем фон с полученным путём к изображению
             closeCreateModal(); // Закрываем модальное окно после успешной загрузки
             setTimeout(() => {
-                window.location.href = `${window.location.href}?t=${new Date().getTime()}`;
-            }, 100);
+                window.location.reload();
+              }, 2000);
 
         } else {
-            alert('Error uploading image: ' + data.message);
+            showToast('error','Ошибка загрузки фона: ' + data.message);
         }
     } catch (error) {
         // Обработка ошибок
-        console.error('Error during upload:', error);
-        alert('An error occurred while uploading the image: ' + error.message);
+        //console.error('Ошибка во время загрузки:', error);
+        showToast('error','Произошла ошибка при загрузке изображения: ' + error.message);
     }
 }
 function updateBackground(imagePath) {
