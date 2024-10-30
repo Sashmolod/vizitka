@@ -10,6 +10,8 @@ services:
     networks:
       - my_network
     restart: unless-stopped
+    volumes:
+      - ./server:/var/www/vizitka/server
 
   client:
     build:
@@ -21,6 +23,8 @@ services:
     networks:
       - my_network
     restart: unless-stopped
+    volumes:
+      - ./client:/var/www/vizitka/client
 
 networks:
   my_network:
