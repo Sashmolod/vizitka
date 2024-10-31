@@ -1,11 +1,9 @@
 FROM node:14
 
-# Установка необходимого пакета для добавления PPA
-RUN apt-get update && apt-get install -y software-properties-common
-
-# Добавление PPA для более новой версии Git
-RUN add-apt-repository ppa:git-core/ppa -y && \
-    apt-get update && apt-get install -y git
+# Установка Git из стандартного репозитория
+RUN apt-get update && \
+    apt-get install -y git && \
+    apt-get clean
 
 # Установка рабочей директории
 WORKDIR /usr/src/server
