@@ -6,15 +6,17 @@ RUN apt-get update && apt-get install -y git
 # Установка рабочей директории
 WORKDIR /usr/src/server
 
-# Клонирование репозитория
-RUN git clone https://github.com/Sashmolod/vizitka.git .
+# Клонирование репозитория без checkout
+RUN git clone --no-checkout https://github.com/Sashmolod/vizitka.git .
+
+# Инициализация sparse-checkout и выбор нужной папки
+RUN git sparse-checkout init --cone && \
+    git sparse-checkout set server && \
+    git checkout master
 
 # Установка зависимостей
 COPY package*.json ./
 RUN npm install
-
-# Копирование серверных файлов
-COPY server/ .
 
 EXPOSE 3050
 

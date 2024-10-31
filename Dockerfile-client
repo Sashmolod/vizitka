@@ -6,8 +6,13 @@ RUN apt-get update && apt-get install -y git
 # Установка рабочей директории
 WORKDIR /usr/share/nginx/html
 
-# Клонирование репозитория
-RUN git clone https://github.com/Sashmolod/vizitka.git .
+# Клонирование репозитория без checkout
+RUN git clone --no-checkout https://github.com/Sashmolod/vizitka.git .
+
+# Инициализация sparse-checkout и выбор нужной папки
+RUN git sparse-checkout init --cone && \
+    git sparse-checkout set client/vizitka-example && \
+    git checkout master
 
 # Копирование конфигурации Nginx
 COPY nginx.conf /etc/nginx/conf.d/default.conf
