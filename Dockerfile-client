@@ -1,23 +1,9 @@
 FROM nginx
 
-# Установка зависимостей и последней версии Git
-RUN apt-get update && \
-    apt-get install -y software-properties-common && \
-    apt-get install -y git && \
-    apt-get clean
-
-# Установка рабочей директории
 WORKDIR /usr/share/nginx/html
 
-# Клонирование репозитория без checkout
-RUN git clone --no-checkout https://github.com/Sashmolod/vizitka.git .
+COPY client/vizitka-example .
 
-# Инициализация sparse-checkout и выбор нужной папки
-RUN git config core.sparseCheckout true && \
-    echo "client/vizitka-example/" >> .git/info/sparse-checkout && \
-    git checkout master
-
-# Копирование конфигурации Nginx
 COPY nginx.conf /etc/nginx/conf.d/default.conf
 
 EXPOSE 8010
