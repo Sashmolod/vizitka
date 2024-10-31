@@ -1,26 +1,22 @@
 FROM node:14
 
-# Установка необходимых пакетов
+# Установка зависимостей и последней версии Git
 RUN apt-get update && \
-    apt-get install -y curl && \
     apt-get install -y software-properties-common && \
-    apt-get clean
-
-# Установка последней версии Git
-RUN curl -fsSL https://deb.nodesource.com/setup_14.x | bash - && \
-    curl -s https://packagecloud.io/install/repositories/github/git-lfs/script.deb.sh | bash && \
+    add-apt-repository ppa:git-core/ppa -y && \
+    apt-get update && \
     apt-get install -y git && \
     apt-get clean
 
 # Установка рабочей директории
 WORKDIR /usr/src/server
 
-# Клонирование репозитория
+# Клонирование репозитория без checkout
 RUN git clone --no-checkout https://github.com/Sashmolod/vizitka.git .
 
 # Инициализация sparse-checkout и выбор нужной папки
-RUN git sparse-checkout init --cone && \
-    git sparse-checkout set server && \
+RUN git config core.sparseCheckout true && \
+    echo "server/" >> .git/info/sparse-checkout && \
     git checkout master
 
 # Установка зависимостей
