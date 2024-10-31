@@ -1,4 +1,4 @@
-FROM node:14
+FROM node:18
 
 # Установка зависимостей и последней версии Git
 RUN apt-get update && \
