@@ -283,14 +283,21 @@ app.use((err, req, res, next) => {
 
 // Вебхук для обновления репозитория
 app.post('/webhook', (req, res) => {
-    exec('git -C /var/www/vizitka pull', (err, stdout, stderr) => {
+    const branch = req.body.ref.split('/').pop(); // Получаем имя ветки
+    console.log(`Received push event for branch: ${branch}`);
+
+    if (branch !== 'master') {
+        console.log('Игнорируем обновления, так как ветка не master.');
+        return res.status(200).send('Ignored update from non-master branch');
+    }
+
+    exec('/var/www/vizitka/update_and_restart.sh', (err, stdout, stderr) => {
         if (err) {
-            console.error(`exec error: ${err}`);
-            return res.status(500).send('Error pulling repo');
+            console.error(`Error: ${stderr}`);
+            return res.status(500).send('Error updating project');
         }
-        console.log(`stdout: ${stdout}`);
-        console.error(`stderr: ${stderr}`);
-        res.status(200).send('Repo updated');
+        console.log(stdout);
+        res.status(200).send('Project updated');
     });
 });
 
