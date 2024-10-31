@@ -2,27 +2,39 @@
 
 # Путь к вашему проекту
 PROJECT_DIR="/var/www/vizitka"
-
 cd $PROJECT_DIR
 
 # Проверяем наличие обновлений
-if git fetch origin && [ $(git rev-parse HEAD) != $(git rev-parse @{u}) ]; then
-    echo "Обновление найдено, выполняем обновление..."
+if git fetch origin; then
+    # Проверяем, находится ли HEAD на ветке master
+    CURRENT_BRANCH=$(git rev-parse --abbrev-ref HEAD)
 
-    # Обновляем сервер
-    cd server
-    git pull
+    if [ "$CURRENT_BRANCH" != "master" ]; then
+        echo "Игнорируем обновления, так как текущая ветка не master."
+        exit 0
+    fi
 
-    # Обновляем клиент
-    cd ../client
-    git pull
+    # Пуллим изменения для master
+    if [ $(git rev-parse HEAD) != $(git rev-parse @{u}) ]; then
+        echo "Обновление найдено в ветке master, выполняем обновление..."
 
-    # Перезапускаем контейнеры
-    cd $PROJECT_DIR
-    docker-compose down
-    docker-compose up -d --build
+        # Обновляем сервер
+        cd server
+        git pull origin master
 
-    echo "Контейнеры перезапущены."
+        # Обновляем клиент
+        cd ../client
+        git pull origin master
+
+        # Перезапускаем контейнеры
+        cd $PROJECT_DIR
+        docker-compose down
+        docker-compose up -d --build
+
+        echo "Контейнеры перезапущены."
+    else
+        echo "Обновлений нет в ветке master."
+    fi
 else
-    echo "Обновлений нет."
+    echo "Ошибка при получении обновлений."
 fi
