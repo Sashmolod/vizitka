@@ -1,7 +1,14 @@
 FROM node:14
 
-# Установка Git из стандартного репозитория
+# Установка необходимых пакетов
 RUN apt-get update && \
+    apt-get install -y curl && \
+    apt-get install -y software-properties-common && \
+    apt-get clean
+
+# Установка последней версии Git
+RUN curl -fsSL https://deb.nodesource.com/setup_14.x | bash - && \
+    curl -s https://packagecloud.io/install/repositories/github/git-lfs/script.deb.sh | bash && \
     apt-get install -y git && \
     apt-get clean
 
