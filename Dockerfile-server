@@ -1,12 +1,16 @@
 FROM node:14
 
-# Установка Git для клонирования
-RUN apt-get update && apt-get install -y git
+# Установка необходимого пакета для добавления PPA
+RUN apt-get update && apt-get install -y software-properties-common
+
+# Добавление PPA для более новой версии Git
+RUN add-apt-repository ppa:git-core/ppa -y && \
+    apt-get update && apt-get install -y git
 
 # Установка рабочей директории
 WORKDIR /usr/src/server
 
-# Клонирование репозитория без checkout
+# Клонирование репозитория
 RUN git clone --no-checkout https://github.com/Sashmolod/vizitka.git .
 
 # Инициализация sparse-checkout и выбор нужной папки
