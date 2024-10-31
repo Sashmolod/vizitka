@@ -1,28 +1,14 @@
-FROM node:18
+FROM node:14
 
-# Установка зависимостей и последней версии Git
-RUN apt-get update && \
-    apt-get install -y software-properties-common && \
-    add-apt-repository ppa:git-core/ppa -y && \
-    apt-get update && \
-    apt-get install -y git && \
-    apt-get clean
-
-# Установка рабочей директории
 WORKDIR /usr/src/server
 
-# Клонирование репозитория без checkout
-RUN git clone --no-checkout https://github.com/Sashmolod/vizitka.git .
-
-# Инициализация sparse-checkout и выбор нужной папки
-RUN git config core.sparseCheckout true && \
-    echo "server/" >> .git/info/sparse-checkout && \
-    git checkout master
-
-# Установка зависимостей
 COPY package*.json ./
+
 RUN npm install
+
+COPY server/ .
 
 EXPOSE 3050
 
+#CMD ["npm", "run", "dev"]
 CMD ["node", "server.js"]
