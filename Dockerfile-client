@@ -3,8 +3,6 @@ FROM nginx
 # Установка зависимостей и последней версии Git
 RUN apt-get update && \
     apt-get install -y software-properties-common && \
-    add-apt-repository ppa:git-core/ppa -y && \
-    apt-get update && \
     apt-get install -y git && \
     apt-get clean
 
